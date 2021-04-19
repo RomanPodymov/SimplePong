@@ -7,6 +7,7 @@
 //
 
 #include "paddle.h"
+#include "gamefield.h"
 #include <QPen>
 
 Paddle::Paddle(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize) {
@@ -26,17 +27,17 @@ void Paddle::onMouseMoveRight(GameField* field) {
     onMouseMove(field, 1, &Paddle::canMoveRight);
 }
 
-MoveBlocker Paddle::ballMoveBlocker(GameEntity* ball, int nextX, int nextY) {
+MoveBlocker Paddle::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
     if (nextY + ball->entityRect.height() > entityRect.y() && nextX > entityRect.x() && nextX + ball->entityRect.width() < entityRect.right()) {
         return MoveBlocker::paddle;
     }
     return MoveBlocker::none;
 }
 
-QRect Paddle::initialEntityRect(GameField* field) {
+QRect Paddle::initialEntityRect(GameField* field) const {
     return QRect(
-        (field->gameFieldColumns - entityRect.size().width())/2,
-        field->gameFieldRows - entityRect.size().height(),
+        (field->gameFieldColumns() - entityRect.size().width())/2,
+        field->gameFieldRows() - entityRect.size().height(),
         entityRect.size().width(),
         entityRect.size().height()
     );
@@ -45,7 +46,7 @@ QRect Paddle::initialEntityRect(GameField* field) {
 void Paddle::drawEntity() {
     QPen pen(Qt::green, 3);
     setPen(pen);
-    setRect(entityRect.x(), entityRect.y(), entityRect.width(), entityRect.height());
+    setRect(entityRect);
 }
 
 void Paddle::onMouseMove(GameField* field, int stepSizeSign, bool(Paddle::*canMove)(const GameField* const)) {
@@ -61,5 +62,5 @@ bool Paddle::canMoveLeft(const GameField* const) {
 }
 
 bool Paddle::canMoveRight(const GameField* const field) {
-    return entityRect.right() + stepSize <= field->gameFieldColumns;
+    return entityRect.right() + stepSize <= field->gameFieldColumns();
 }

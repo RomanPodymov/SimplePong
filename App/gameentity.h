@@ -9,10 +9,11 @@
 #ifndef GAMEENTITY_H
 #define GAMEENTITY_H
 
-#include "gamefield.h"
 #include <QRect>
 
 enum MoveBlocker { none, rightWall, bottomWall, leftWall, topWall, paddle };
+
+class GameField;
 
 class GameEntity {
 
@@ -22,12 +23,13 @@ public:
     virtual void onTimerTick(GameField*) = 0;
     virtual void onMouseMoveLeft(GameField*) = 0;
     virtual void onMouseMoveRight(GameField*) = 0;
-    virtual MoveBlocker ballMoveBlocker(GameEntity*, int, int) = 0;
+    virtual MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const = 0;
+    virtual void onGameReset(GameField*);
 
 protected:
-    virtual QRect initialEntityRect(GameField*) = 0;
+    virtual QRect initialEntityRect(GameField*) const = 0;
     virtual void drawEntity() = 0;
-    QRect nextEntityRect(int, int);
+    QRect nextEntityRect(int, int) const;
 
 public:
     QRect entityRect;

@@ -38,10 +38,10 @@ void Ball::onTimerTick(GameField* field) {
     drawEntity();
 }
 
-QRect Ball::initialEntityRect(GameField* field) {
+QRect Ball::initialEntityRect(GameField* field) const {
     return QRect(
-        (field->gameFieldColumns - entityRect.size().width())/2,
-        (field->gameFieldRows - entityRect.size().height())/2,
+        (field->gameFieldColumns() - entityRect.size().width())/2,
+        (field->gameFieldRows() - entityRect.size().height())/2,
         entityRect.size().width(),
         entityRect.size().height()
     );
@@ -50,14 +50,14 @@ QRect Ball::initialEntityRect(GameField* field) {
 void Ball::drawEntity() {
     QPen pen(Qt::yellow, 3);
     setPen(pen);
-    setRect(entityRect.x(), entityRect.y(), entityRect.width(), entityRect.height());
+    setRect(entityRect);
 }
 
 MoveDirection Ball::randomDirection() {
     return MoveDirection(QRandomGenerator::global()->generate() % 4);
 }
 
-std::tuple<int, int> Ball::getDxDy() {
+std::tuple<int, int> Ball::getDxDy() const {
     switch (currentMoveDirection) {
         case MoveDirection::rightUp: {
             return std::tuple<int, int>(stepSize, -stepSize);
@@ -77,28 +77,15 @@ std::tuple<int, int> Ball::getDxDy() {
     }
 }
 
-MoveBlocker Ball::moveBlocker(GameField* field) {
+MoveBlocker Ball::moveBlocker(GameField* field) const {
     const auto dXdY = getDxDy();
     const auto nextX = entityRect.x() + std::get<0>(dXdY);
     const auto nextY = entityRect.y() + std::get<1>(dXdY);
     const auto gameManager = static_cast<GameManager*>(field);
-    const auto blocker = gameManager->firstBallMoveBlocker(this, nextX, nextY);
-    if (blocker != MoveBlocker::none) {
-        return blocker;
-    } else if (nextX < 0) {
-        return MoveBlocker::leftWall;
-    } else if (nextY < 0) {
-        return MoveBlocker::topWall;
-    } else if (nextX + entityRect.width() > field->gameFieldColumns) {
-        return MoveBlocker::rightWall;
-    } else if (nextY + entityRect.height() > field->gameFieldRows) {
-        return MoveBlocker::bottomWall;
-    } else {
-        return MoveBlocker::none;
-    }
+    return gameManager->firstBallMoveBlocker(this, nextX, nextY);
 }
 
-MoveDirection Ball::nextMoveDirection(MoveBlocker moveBlocker) {
+MoveDirection Ball::nextMoveDirection(MoveBlocker moveBlocker) const {
     switch (currentMoveDirection) {
         case MoveDirection::rightUp: {
             if (moveBlocker == MoveBlocker::topWall) {

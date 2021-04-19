@@ -13,7 +13,11 @@ GameEntity::GameEntity(QRect entityRect, int stepSize): entityRect(entityRect),
 
 }
 
-QRect GameEntity::nextEntityRect(int dx, int dy) {
+void GameEntity::onGameReset(GameField* field) {
+    setupInitialState(field, false);
+}
+
+QRect GameEntity::nextEntityRect(int dx, int dy) const {
     return QRect(
         entityRect.x() + dx,
         entityRect.y() + dy,

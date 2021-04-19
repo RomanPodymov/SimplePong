@@ -23,20 +23,20 @@ public:
     void onTimerTick(GameField*);
     void onMouseMoveLeft(GameField*) { };
     void onMouseMoveRight(GameField*) { };
-    MoveBlocker ballMoveBlocker(GameEntity*, int, int) { return MoveBlocker::none; }
+    MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const { return MoveBlocker::none; }
 
 signals:
    void goal();
 
 protected:
-    QRect initialEntityRect(GameField*);
+    QRect initialEntityRect(GameField*) const;
     void drawEntity();
 
 private:
     static MoveDirection randomDirection();
-    std::tuple<int, int> getDxDy();
-    MoveBlocker moveBlocker(GameField*);
-    MoveDirection nextMoveDirection(MoveBlocker);
+    std::tuple<int, int> getDxDy() const;
+    MoveBlocker moveBlocker(GameField*) const;
+    MoveDirection nextMoveDirection(MoveBlocker) const;
 
 private:
     MoveDirection currentMoveDirection;

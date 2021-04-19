@@ -21,10 +21,10 @@ public:
     void onTimerTick(GameField*) { };
     void onMouseMoveLeft(GameField*);
     void onMouseMoveRight(GameField*);
-    MoveBlocker ballMoveBlocker(GameEntity*, int, int);
+    MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const;
 
 protected:
-    QRect initialEntityRect(GameField*);
+    QRect initialEntityRect(GameField*) const;
     void drawEntity();
 
 private:

@@ -9,14 +9,14 @@
 #ifndef GAMEFIELD_H
 #define GAMEFIELD_H
 
-class GameField {
+#include "gameentity.h"
+
+class GameField: public GameEntity {
 
 public:
     GameField(int gameFieldRows, int gameFieldColumns);
-
-public:
-    const int gameFieldRows;
-    const int gameFieldColumns;
+    int gameFieldColumns() const { return entityRect.width(); }
+    int gameFieldRows() const { return entityRect.height(); }
 };
 
 #endif // GAMEFIELD_H

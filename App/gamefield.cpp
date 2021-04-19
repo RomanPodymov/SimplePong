@@ -8,7 +8,6 @@
 
 #include "gamefield.h"
 
-GameField::GameField(int gameFieldRows, int gameFieldColumns): gameFieldRows(gameFieldRows),
-    gameFieldColumns(gameFieldColumns) {
+GameField::GameField(int gameFieldRows, int gameFieldColumns): GameEntity(QRect(0, 0, gameFieldColumns, gameFieldRows), 0) {
 
 }

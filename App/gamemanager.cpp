@@ -9,7 +9,6 @@
 #include "gamemanager.h"
 
 GameManager::GameManager(const GameView* gameView, int gameFieldRows, int gameFieldColumns): GameField(gameFieldRows, gameFieldColumns),
-    GameEntity(QRect(0, 0, gameFieldRows, gameFieldColumns), 0),
     gameView(gameView) {
     QObject::connect(gameView, SIGNAL(mouseMoveLeft()), this, SLOT(onMouseMoveLeft()));
     QObject::connect(gameView, SIGNAL(mouseMoveRight()), this, SLOT(onMouseMoveRight()));
@@ -24,7 +23,7 @@ void GameManager::addEntity(GameEntity* entity) {
     entity->setupInitialState(this, true);
 }
 
-MoveBlocker GameManager::firstBallMoveBlocker(GameEntity* ball, int nextX, int nextY) {
+MoveBlocker GameManager::firstBallMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
     for (const auto& entity : entities) {
         const auto blocker = entity->ballMoveBlocker(ball, nextX, nextY);
         if (blocker != MoveBlocker::none) {
@@ -46,12 +45,22 @@ void GameManager::onMouseMoveRight(GameField* field) {
     forAllEntities(field, &GameEntity::onMouseMoveRight);
 }
 
-MoveBlocker GameManager::ballMoveBlocker(GameEntity*, int, int) {
-    return MoveBlocker::none;
+MoveBlocker GameManager::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
+    if (nextX < 0) {
+        return MoveBlocker::leftWall;
+    } else if (nextY < 0) {
+        return MoveBlocker::topWall;
+    } else if (nextX + ball->entityRect.width() > gameFieldColumns()) {
+        return MoveBlocker::rightWall;
+    } else if (nextY + ball->entityRect.height() > gameFieldRows()) {
+        return MoveBlocker::bottomWall;
+    } else {
+        return MoveBlocker::none;
+    }
 }
 
 void GameManager::onGoal() {
-    resetGame();
+    onGameReset(this);
 }
 
 void GameManager::timerEvent(QTimerEvent*) {
@@ -66,10 +75,8 @@ void GameManager::onMouseMoveRight() {
     onMouseMoveRight(this);
 }
 
-void GameManager::resetGame() {
-    for (const auto& entity : entities) {
-        entity->setupInitialState(this, false);
-    }
+void GameManager::onGameReset(GameField* field) {
+    forAllEntities(field, &GameEntity::onGameReset);
 }
 
 void GameManager::forAllEntities(GameField* field, void(GameEntity::*functionToCall)(GameField*)) {
