@@ -28,7 +28,9 @@ void Paddle::onMouseMoveRight(GameManager* gameManager) {
 }
 
 MoveBlocker Paddle::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
-    if (nextY + ball->entityRect.height() > entityRect.y() && nextX > entityRect.x() && nextX + ball->entityRect.width() < entityRect.right()) {
+    if (nextY + ball->entityRect.height() > entityRect.y() &&
+        nextX > entityRect.x() - ball->entityRect.width() &&
+        nextX < entityRect.right()) {
         return MoveBlocker::paddle;
     }
     return MoveBlocker::none;
