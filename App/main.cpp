@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
     GameManager gameManager(&view, screenSize.height(), screenSize.width());
     gameManager.addEntity(&paddle);
     gameManager.addEntity(&ball);
+    gameManager.addEntity(&gameManager);
     gameManager.start();
 
     view.setFixedSize(screenSize);

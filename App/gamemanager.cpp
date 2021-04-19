@@ -9,6 +9,7 @@
 #include "gamemanager.h"
 
 GameManager::GameManager(const GameView* gameView, int gameFieldRows, int gameFieldColumns): GameField(gameFieldRows, gameFieldColumns),
+    GameEntity(QRect(0, 0, gameFieldRows, gameFieldColumns), 0),
     gameView(gameView) {
     QObject::connect(gameView, SIGNAL(mouseMoveLeft()), this, SLOT(onMouseMoveLeft()));
     QObject::connect(gameView, SIGNAL(mouseMoveRight()), this, SLOT(onMouseMoveRight()));
@@ -24,7 +25,7 @@ void GameManager::addEntity(GameEntity* entity) {
 }
 
 MoveBlocker GameManager::firstBallMoveBlocker(GameEntity* ball, int nextX, int nextY) {
-    foreach (const auto& entity, entities) {
+    for (const auto& entity : entities) {
         const auto blocker = entity->ballMoveBlocker(ball, nextX, nextY);
         if (blocker != MoveBlocker::none) {
             return blocker;
@@ -33,30 +34,48 @@ MoveBlocker GameManager::firstBallMoveBlocker(GameEntity* ball, int nextX, int n
     return MoveBlocker::none;
 }
 
+void GameManager::onTimerTick(GameField* field) {
+    forAllEntities(field, &GameEntity::onTimerTick);
+}
+
+void GameManager::onMouseMoveLeft(GameField* field) {
+    forAllEntities(field, &GameEntity::onMouseMoveLeft);
+}
+
+void GameManager::onMouseMoveRight(GameField* field) {
+    forAllEntities(field, &GameEntity::onMouseMoveRight);
+}
+
+MoveBlocker GameManager::ballMoveBlocker(GameEntity*, int, int) {
+    return MoveBlocker::none;
+}
+
 void GameManager::onGoal() {
     resetGame();
 }
 
 void GameManager::timerEvent(QTimerEvent*) {
-    foreach (const auto& entity, entities) {
-        entity->onTimerTick(this);
-    }
+    onTimerTick(this);
 }
 
 void GameManager::onMouseMoveLeft() {
-    foreach (const auto& entity, entities) {
-        entity->onMouseMoveLeft(this);
-    }
+    onMouseMoveLeft(this);
 }
 
 void GameManager::onMouseMoveRight() {
-    foreach (const auto& entity, entities) {
-        entity->onMouseMoveRight(this);
-    }
+    onMouseMoveRight(this);
 }
 
 void GameManager::resetGame() {
-    foreach (const auto& entity, entities) {
+    for (const auto& entity : entities) {
         entity->setupInitialState(this, false);
+    }
+}
+
+void GameManager::forAllEntities(GameField* field, void(GameEntity::*functionToCall)(GameField*)) {
+    for (const auto& entity : entities) {
+        if (entity != this) {
+            std::invoke(functionToCall, entity, field);
+        }
     }
 }

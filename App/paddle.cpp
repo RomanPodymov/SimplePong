@@ -18,10 +18,6 @@ void Paddle::setupInitialState(GameField* field, bool) {
     drawEntity();
 }
 
-void Paddle::onTimerTick(GameField*) {
-
-}
-
 void Paddle::onMouseMoveLeft(GameField* field) {
     onMouseMove(field, -1, &Paddle::canMoveLeft);
 }

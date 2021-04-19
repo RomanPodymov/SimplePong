@@ -18,7 +18,7 @@ class Paddle final: public QGraphicsRectItem, public GameEntity {
 public:
     Paddle(QRect, int);
     void setupInitialState(GameField*, bool);
-    void onTimerTick(GameField*);
+    void onTimerTick(GameField*) { };
     void onMouseMoveLeft(GameField*);
     void onMouseMoveRight(GameField*);
     MoveBlocker ballMoveBlocker(GameEntity*, int, int);

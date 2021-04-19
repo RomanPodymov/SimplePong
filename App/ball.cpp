@@ -38,14 +38,6 @@ void Ball::onTimerTick(GameField* field) {
     drawEntity();
 }
 
-void Ball::onMouseMoveLeft(GameField*) {
-
-}
-
-void Ball::onMouseMoveRight(GameField*) {
-
-}
-
 QRect Ball::initialEntityRect(GameField* field) {
     return QRect(
         (field->gameFieldColumns - entityRect.size().width())/2,

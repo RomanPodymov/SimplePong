@@ -2,7 +2,7 @@ TEMPLATE = app
 
 QT += core gui widgets
 
-CONFIG += c++17
+CONFIG += c++17 warn_on
 
 SOURCES += \
     ball.cpp \

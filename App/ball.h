@@ -21,8 +21,8 @@ public:
     Ball(QRect, int);
     void setupInitialState(GameField*, bool);
     void onTimerTick(GameField*);
-    void onMouseMoveLeft(GameField*);
-    void onMouseMoveRight(GameField*);
+    void onMouseMoveLeft(GameField*) { };
+    void onMouseMoveRight(GameField*) { };
     MoveBlocker ballMoveBlocker(GameEntity*, int, int) { return MoveBlocker::none; }
 
 signals:

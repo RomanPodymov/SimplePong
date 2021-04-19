@@ -16,7 +16,7 @@
 #include <QVarLengthArray>
 #include <QPointer>
 
-class GameManager final: public QObject, public GameField {
+class GameManager final: public QObject, public GameField, public GameEntity {
     Q_OBJECT
 
 public:
@@ -24,15 +24,23 @@ public:
     void start();
     void addEntity(GameEntity*);
     MoveBlocker firstBallMoveBlocker(GameEntity*, int, int);
+    void setupInitialState(GameField*, bool) { }
+    void onTimerTick(GameField*);
+    void onMouseMoveLeft(GameField*);
+    void onMouseMoveRight(GameField*);
+    MoveBlocker ballMoveBlocker(GameEntity*, int, int);
 
 public slots:
     void onGoal();
 
 protected:
     void timerEvent(QTimerEvent *event);
+    QRect initialEntityRect(GameField*) { return QRect(0, 0, 0, 0); };
+    void drawEntity() { };
 
 private:
     void resetGame();
+    void forAllEntities(GameField*, void(GameEntity::*)(GameField*));
 
 private slots:
     void onMouseMoveLeft();
