@@ -15,18 +15,17 @@ Ball::Ball(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize) {
 
 }
 
-void Ball::setupInitialState(GameField* field, bool firstTime) {
+void Ball::setupInitialState(GameManager* gameManager, bool firstTime) {
     if (firstTime) {
-        const auto gameManager = static_cast<GameManager*>(field);
         QObject::connect(this, SIGNAL(goal()), gameManager, SLOT(onGoal()));
     }
     currentMoveDirection = Ball::randomDirection();
-    entityRect = initialEntityRect(field);
+    entityRect = initialEntityRect(gameManager);
     drawEntity();
 }
 
-void Ball::onTimerTick(GameField* field) {
-    const auto moveBlockerValue = moveBlocker(field);
+void Ball::onTimerTick(GameManager* gameManager) {
+    const auto moveBlockerValue = moveBlocker(gameManager);
     if (moveBlockerValue == MoveBlocker::bottomWall) {
         emit goal();
         return;
@@ -38,10 +37,10 @@ void Ball::onTimerTick(GameField* field) {
     drawEntity();
 }
 
-QRect Ball::initialEntityRect(GameField* field) const {
+QRect Ball::initialEntityRect(GameManager* gameManager) const {
     return QRect(
-        (field->gameFieldColumns() - entityRect.size().width())/2,
-        (field->gameFieldRows() - entityRect.size().height())/2,
+        (gameManager->gameFieldColumns() - entityRect.size().width())/2,
+        (gameManager->gameFieldRows() - entityRect.size().height())/2,
         entityRect.size().width(),
         entityRect.size().height()
     );
@@ -77,11 +76,10 @@ std::tuple<int, int> Ball::getDxDy() const {
     }
 }
 
-MoveBlocker Ball::moveBlocker(GameField* field) const {
+MoveBlocker Ball::moveBlocker(GameManager* gameManager) const {
     const auto dXdY = getDxDy();
     const auto nextX = entityRect.x() + std::get<0>(dXdY);
     const auto nextY = entityRect.y() + std::get<1>(dXdY);
-    const auto gameManager = static_cast<GameManager*>(field);
     return gameManager->firstBallMoveBlocker(this, nextX, nextY);
 }
 

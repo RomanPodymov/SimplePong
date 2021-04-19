@@ -13,8 +13,8 @@ GameEntity::GameEntity(QRect entityRect, int stepSize): entityRect(entityRect),
 
 }
 
-void GameEntity::onGameReset(GameField* field) {
-    setupInitialState(field, false);
+void GameEntity::onGameReset(GameManager* gameManager) {
+    setupInitialState(gameManager, false);
 }
 
 QRect GameEntity::nextEntityRect(int dx, int dy) const {

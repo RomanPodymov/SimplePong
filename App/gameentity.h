@@ -13,21 +13,21 @@
 
 enum MoveBlocker { none, rightWall, bottomWall, leftWall, topWall, paddle };
 
-class GameField;
+class GameManager;
 
 class GameEntity {
 
 public:
     GameEntity(QRect, int);
-    virtual void setupInitialState(GameField*, bool) = 0;
-    virtual void onTimerTick(GameField*) = 0;
-    virtual void onMouseMoveLeft(GameField*) = 0;
-    virtual void onMouseMoveRight(GameField*) = 0;
+    virtual void setupInitialState(GameManager*, bool) = 0;
+    virtual void onTimerTick(GameManager*) = 0;
+    virtual void onMouseMoveLeft(GameManager*) = 0;
+    virtual void onMouseMoveRight(GameManager*) = 0;
     virtual MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const = 0;
-    virtual void onGameReset(GameField*);
+    virtual void onGameReset(GameManager*);
 
 protected:
-    virtual QRect initialEntityRect(GameField*) const = 0;
+    virtual QRect initialEntityRect(GameManager*) const = 0;
     virtual void drawEntity() = 0;
     QRect nextEntityRect(int, int) const;
 

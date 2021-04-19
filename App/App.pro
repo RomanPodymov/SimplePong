@@ -8,7 +8,6 @@ SOURCES += \
     ball.cpp \
     main.cpp \
     gameentity.cpp \
-    gamefield.cpp \
     gamemanager.cpp \
     gameview.cpp \
     paddle.cpp
@@ -16,7 +15,6 @@ SOURCES += \
 HEADERS += \
     ball.h \
     gameentity.h \
-    gamefield.h \
     gamemanager.h \
     gameview.h \
     paddle.h

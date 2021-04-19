@@ -10,13 +10,12 @@
 #define GAMEMANAGER_H
 
 #include "gameentity.h"
-#include "gamefield.h"
 #include "gameview.h"
 #include <QObject>
 #include <QVarLengthArray>
 #include <QPointer>
 
-class GameManager final: public QObject, public GameField {
+class GameManager final: public QObject, public GameEntity {
     Q_OBJECT
 
 public:
@@ -24,23 +23,25 @@ public:
     void start();
     void addEntity(GameEntity*);
     MoveBlocker firstBallMoveBlocker(const GameEntity* const, int, int) const;
-    void setupInitialState(GameField*, bool) { }
-    void onTimerTick(GameField*);
-    void onMouseMoveLeft(GameField*);
-    void onMouseMoveRight(GameField*);
+    void setupInitialState(GameManager*, bool) { }
+    void onTimerTick(GameManager*);
+    void onMouseMoveLeft(GameManager*);
+    void onMouseMoveRight(GameManager*);
     MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const;
-    void onGameReset(GameField*);
+    void onGameReset(GameManager*);
+    int gameFieldColumns() const { return entityRect.width(); }
+    int gameFieldRows() const { return entityRect.height(); }
 
 public slots:
     void onGoal();
 
 protected:
     void timerEvent(QTimerEvent *event);
-    QRect initialEntityRect(GameField*) const { return entityRect; };
+    QRect initialEntityRect(GameManager*) const { return entityRect; };
     void drawEntity() { };
 
 private:
-    void forAllEntities(GameField*, void(GameEntity::*)(GameField*));
+    void forAllEntities(GameManager*, void(GameEntity::*)(GameManager*));
 
 private slots:
     void onMouseMoveLeft();

@@ -7,24 +7,24 @@
 //
 
 #include "paddle.h"
-#include "gamefield.h"
+#include "gamemanager.h"
 #include <QPen>
 
 Paddle::Paddle(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize) {
 
 }
 
-void Paddle::setupInitialState(GameField* field, bool) {
-    entityRect = initialEntityRect(field);
+void Paddle::setupInitialState(GameManager* gameManager, bool) {
+    entityRect = initialEntityRect(gameManager);
     drawEntity();
 }
 
-void Paddle::onMouseMoveLeft(GameField* field) {
-    onMouseMove(field, -1, &Paddle::canMoveLeft);
+void Paddle::onMouseMoveLeft(GameManager* gameManager) {
+    onMouseMove(gameManager, -1, &Paddle::canMoveLeft);
 }
 
-void Paddle::onMouseMoveRight(GameField* field) {
-    onMouseMove(field, 1, &Paddle::canMoveRight);
+void Paddle::onMouseMoveRight(GameManager* gameManager) {
+    onMouseMove(gameManager, 1, &Paddle::canMoveRight);
 }
 
 MoveBlocker Paddle::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
@@ -34,10 +34,10 @@ MoveBlocker Paddle::ballMoveBlocker(const GameEntity* const ball, int nextX, int
     return MoveBlocker::none;
 }
 
-QRect Paddle::initialEntityRect(GameField* field) const {
+QRect Paddle::initialEntityRect(GameManager* gameManager) const {
     return QRect(
-        (field->gameFieldColumns() - entityRect.size().width())/2,
-        field->gameFieldRows() - entityRect.size().height(),
+        (gameManager->gameFieldColumns() - entityRect.size().width())/2,
+        gameManager->gameFieldRows() - entityRect.size().height(),
         entityRect.size().width(),
         entityRect.size().height()
     );
@@ -49,18 +49,18 @@ void Paddle::drawEntity() {
     setRect(entityRect);
 }
 
-void Paddle::onMouseMove(GameField* field, int stepSizeSign, bool(Paddle::*canMove)(const GameField* const)) {
-    if (!(std::invoke(canMove, this, field))) {
+void Paddle::onMouseMove(GameManager* gameManager, int stepSizeSign, bool(Paddle::*canMove)(const GameManager* const)) {
+    if (!(std::invoke(canMove, this, gameManager))) {
         return;
     }
     entityRect = nextEntityRect(stepSize * stepSizeSign, 0);
     drawEntity();
 }
 
-bool Paddle::canMoveLeft(const GameField* const) {
+bool Paddle::canMoveLeft(const GameManager* const) {
     return entityRect.x() - stepSize >= 0;
 }
 
-bool Paddle::canMoveRight(const GameField* const field) {
-    return entityRect.right() + stepSize <= field->gameFieldColumns();
+bool Paddle::canMoveRight(const GameManager* const gameManager) {
+    return entityRect.right() + stepSize <= gameManager->gameFieldColumns();
 }

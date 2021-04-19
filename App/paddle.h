@@ -17,20 +17,20 @@ class Paddle final: public QGraphicsRectItem, public GameEntity {
 
 public:
     Paddle(QRect, int);
-    void setupInitialState(GameField*, bool);
-    void onTimerTick(GameField*) { };
-    void onMouseMoveLeft(GameField*);
-    void onMouseMoveRight(GameField*);
+    void setupInitialState(GameManager*, bool);
+    void onTimerTick(GameManager*) { };
+    void onMouseMoveLeft(GameManager*);
+    void onMouseMoveRight(GameManager*);
     MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const;
 
 protected:
-    QRect initialEntityRect(GameField*) const;
+    QRect initialEntityRect(GameManager*) const;
     void drawEntity();
 
 private:
-    void onMouseMove(GameField* field, int, bool(Paddle::*)(const GameField* const));
-    bool canMoveLeft(const GameField* const);
-    bool canMoveRight(const GameField* const);
+    void onMouseMove(GameManager* field, int, bool(Paddle::*)(const GameManager* const));
+    bool canMoveLeft(const GameManager* const);
+    bool canMoveRight(const GameManager* const);
 };
 
 #endif // PADDLE_H

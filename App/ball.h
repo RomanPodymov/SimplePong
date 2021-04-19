@@ -19,23 +19,23 @@ class Ball final: public QObject, public QGraphicsRectItem, public GameEntity {
 
 public:
     Ball(QRect, int);
-    void setupInitialState(GameField*, bool);
-    void onTimerTick(GameField*);
-    void onMouseMoveLeft(GameField*) { };
-    void onMouseMoveRight(GameField*) { };
+    void setupInitialState(GameManager*, bool);
+    void onTimerTick(GameManager*);
+    void onMouseMoveLeft(GameManager*) { };
+    void onMouseMoveRight(GameManager*) { };
     MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const { return MoveBlocker::none; }
 
 signals:
    void goal();
 
 protected:
-    QRect initialEntityRect(GameField*) const;
+    QRect initialEntityRect(GameManager*) const;
     void drawEntity();
 
 private:
     static MoveDirection randomDirection();
     std::tuple<int, int> getDxDy() const;
-    MoveBlocker moveBlocker(GameField*) const;
+    MoveBlocker moveBlocker(GameManager*) const;
     MoveDirection nextMoveDirection(MoveBlocker) const;
 
 private:
