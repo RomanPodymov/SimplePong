@@ -13,6 +13,11 @@ GameEntity::GameEntity(QRect entityRect, int stepSize): entityRect(entityRect),
 
 }
 
+void GameEntity::setupInitialState(GameManager* gameManager, bool) {
+    entityRect = initialEntityRect(gameManager);
+    drawEntity();
+}
+
 void GameEntity::onGameReset(GameManager* gameManager) {
     setupInitialState(gameManager, false);
 }

@@ -13,7 +13,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
 
-class Paddle final: public QGraphicsRectItem, public GameEntity {
+class Paddle: public QGraphicsRectItem, public GameEntity {
 
 public:
     Paddle(QRect, int);
@@ -26,11 +26,11 @@ public:
 protected:
     QRect initialEntityRect(GameManager*) const;
     void drawEntity();
+    bool canMoveLeft(const GameManager* const);
+    bool canMoveRight(const GameManager* const);
 
 private:
     void onMouseMove(GameManager* field, int, bool(Paddle::*)(const GameManager* const));
-    bool canMoveLeft(const GameManager* const);
-    bool canMoveRight(const GameManager* const);
 };
 
 #endif // PADDLE_H

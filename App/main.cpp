@@ -10,6 +10,7 @@
 #include "gameview.h"
 #include "ball.h"
 #include "paddle.h"
+#include "paddleopponent.h"
 #include <QApplication>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -25,11 +26,15 @@ int main(int argc, char *argv[]) {
     Ball ball(QRect(0, 0, 10, 10), 5);
     scene.addItem(&ball);
 
+    PaddleOpponent paddleOpponent(QRect(0, 0, 100, 20), 5);
+    scene.addItem(&paddleOpponent);
+
     GameView view(&scene);
 
     GameManager gameManager(&view, screenSize.height(), screenSize.width());
     gameManager.addEntity(&paddle);
     gameManager.addEntity(&ball);
+    gameManager.addEntity(&paddleOpponent);
     gameManager.addEntity(&gameManager);
     gameManager.start();
 

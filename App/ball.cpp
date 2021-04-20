@@ -20,13 +20,12 @@ void Ball::setupInitialState(GameManager* gameManager, bool firstTime) {
         QObject::connect(this, SIGNAL(goal()), gameManager, SLOT(onGoal()));
     }
     currentMoveDirection = Ball::randomDirection();
-    entityRect = initialEntityRect(gameManager);
-    drawEntity();
+    GameEntity::setupInitialState(gameManager, firstTime);
 }
 
 void Ball::onTimerTick(GameManager* gameManager) {
     const auto moveBlockerValue = moveBlocker(gameManager);
-    if (moveBlockerValue == MoveBlocker::bottomWall) {
+    if (moveBlockerValue == MoveBlocker::bottomWall || moveBlockerValue == MoveBlocker::topWall) {
         emit goal();
         return;
     } else if (moveBlockerValue != MoveBlocker::none) {
@@ -52,7 +51,7 @@ void Ball::drawEntity() {
     setRect(entityRect);
 }
 
-MoveDirection Ball::randomDirection() {
+Ball::MoveDirection Ball::randomDirection() {
     return MoveDirection(QRandomGenerator::global()->generate() % 4);
 }
 
@@ -83,10 +82,10 @@ MoveBlocker Ball::moveBlocker(GameManager* gameManager) const {
     return gameManager->firstBallMoveBlocker(this, nextX, nextY);
 }
 
-MoveDirection Ball::nextMoveDirection(MoveBlocker moveBlocker) const {
+Ball::MoveDirection Ball::nextMoveDirection(MoveBlocker moveBlocker) const {
     switch (currentMoveDirection) {
         case MoveDirection::rightUp: {
-            if (moveBlocker == MoveBlocker::topWall) {
+            if (moveBlocker == MoveBlocker::topWall || moveBlocker == MoveBlocker::paddleOpponent) {
                 return MoveDirection::rightDown;
             } else {
                 return MoveDirection::leftUp;
@@ -110,7 +109,7 @@ MoveDirection Ball::nextMoveDirection(MoveBlocker moveBlocker) const {
         }
 
         case MoveDirection::leftUp: {
-            if (moveBlocker == MoveBlocker::topWall) {
+            if (moveBlocker == MoveBlocker::topWall || moveBlocker == MoveBlocker::paddleOpponent) {
                 return MoveDirection::leftDown;
             } else {
                 return MoveDirection::rightUp;

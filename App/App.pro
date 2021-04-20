@@ -10,11 +10,13 @@ SOURCES += \
     gameentity.cpp \
     gamemanager.cpp \
     gameview.cpp \
-    paddle.cpp
+    paddle.cpp \
+    paddleopponent.cpp
 
 HEADERS += \
     ball.h \
     gameentity.h \
     gamemanager.h \
     gameview.h \
-    paddle.h
+    paddle.h \
+    paddleopponent.h

@@ -14,9 +14,8 @@ Paddle::Paddle(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize)
 
 }
 
-void Paddle::setupInitialState(GameManager* gameManager, bool) {
-    entityRect = initialEntityRect(gameManager);
-    drawEntity();
+void Paddle::setupInitialState(GameManager* gameManager, bool firstTime) {
+    GameEntity::setupInitialState(gameManager, firstTime);
 }
 
 void Paddle::onMouseMoveLeft(GameManager* gameManager) {

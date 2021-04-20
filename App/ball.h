@@ -12,10 +12,10 @@
 #include "gameentity.h"
 #include <QGraphicsRectItem>
 
-enum MoveDirection { rightUp, rightDown, leftDown, leftUp };
-
 class Ball final: public QObject, public QGraphicsRectItem, public GameEntity {
     Q_OBJECT
+
+    enum MoveDirection { rightUp, rightDown, leftDown, leftUp };
 
 public:
     Ball(QRect, int);

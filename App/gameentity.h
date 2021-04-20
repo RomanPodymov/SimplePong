@@ -11,7 +11,7 @@
 
 #include <QRect>
 
-enum MoveBlocker { none, rightWall, bottomWall, leftWall, topWall, paddle };
+enum MoveBlocker { none, rightWall, bottomWall, leftWall, topWall, paddle, paddleOpponent };
 
 class GameManager;
 
@@ -19,7 +19,7 @@ class GameEntity {
 
 public:
     GameEntity(QRect, int);
-    virtual void setupInitialState(GameManager*, bool) = 0;
+    virtual void setupInitialState(GameManager*, bool);
     virtual void onTimerTick(GameManager*) = 0;
     virtual void onMouseMoveLeft(GameManager*) = 0;
     virtual void onMouseMoveRight(GameManager*) = 0;
