@@ -21,6 +21,15 @@ void PaddleOpponent::setupInitialState(GameManager* gameManager, bool firstTime)
 }
 
 void PaddleOpponent::onTimerTick(GameManager* gameManager) {
+    const auto expectedBallAndOpponentContactXValue = gameManager->expectedBallAndOpponentContactX(gameManager);
+    if (!expectedBallAndOpponentContactXValue.has_value()) {
+        return;
+    }
+    if (expectedBallAndOpponentContactXValue < entityRect.x() + entityRect.width()/2) {
+        currentMoveDirection = MoveDirection::left;
+    } else {
+        currentMoveDirection = MoveDirection::right;
+    }
     if (currentMoveDirection == MoveDirection::left && !canMoveLeft(gameManager)) {
         currentMoveDirection = MoveDirection::right;
     } else if (currentMoveDirection == MoveDirection::right && !canMoveRight(gameManager)) {
@@ -33,13 +42,13 @@ void PaddleOpponent::onTimerTick(GameManager* gameManager) {
     }
 }
 
-MoveBlocker PaddleOpponent::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
+std::optional<MoveBlocker> PaddleOpponent::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
     if (nextY < entityRect.bottom() &&
         nextX > entityRect.x() - ball->entityRect.width() &&
         nextX < entityRect.right()) {
         return MoveBlocker::paddleOpponent;
     }
-    return MoveBlocker::none;
+    return std::nullopt;
 }
 
 QRect PaddleOpponent::initialEntityRect(GameManager* gameManager) const {

@@ -23,7 +23,8 @@ public:
     void onTimerTick(GameManager*);
     void onMouseMoveLeft(GameManager*) { };
     void onMouseMoveRight(GameManager*) { };
-    MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const { return MoveBlocker::none; }
+    std::optional<MoveBlocker> ballMoveBlocker(const GameEntity* const, int, int) const { return std::nullopt; }
+    std::optional<int> expectedBallAndOpponentContactX(GameManager*) const;
 
 signals:
    void goal();
@@ -35,7 +36,7 @@ protected:
 private:
     static MoveDirection randomDirection();
     std::tuple<int, int> getDxDy() const;
-    MoveBlocker moveBlocker(GameManager*) const;
+    std::optional<MoveBlocker> moveBlocker(GameManager*) const;
     MoveDirection nextMoveDirection(MoveBlocker) const;
 
 private:

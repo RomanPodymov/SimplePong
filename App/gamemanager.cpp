@@ -23,14 +23,14 @@ void GameManager::addEntity(GameEntity* entity) {
     entity->setupInitialState(this, true);
 }
 
-MoveBlocker GameManager::firstBallMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
+std::optional<MoveBlocker> GameManager::firstBallMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
     for (const auto& entity : entities) {
         const auto blocker = entity->ballMoveBlocker(ball, nextX, nextY);
-        if (blocker != MoveBlocker::none) {
+        if (blocker) {
             return blocker;
         }
     }
-    return MoveBlocker::none;
+    return std::nullopt;
 }
 
 void GameManager::onTimerTick(GameManager* gameManager) {
@@ -45,7 +45,7 @@ void GameManager::onMouseMoveRight(GameManager* gameManager) {
     forAllEntities(gameManager, &GameEntity::onMouseMoveRight);
 }
 
-MoveBlocker GameManager::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
+std::optional<MoveBlocker> GameManager::ballMoveBlocker(const GameEntity* const ball, int nextX, int nextY) const {
     if (nextX < 0) {
         return MoveBlocker::leftWall;
     } else if (nextY < 0) {
@@ -55,8 +55,20 @@ MoveBlocker GameManager::ballMoveBlocker(const GameEntity* const ball, int nextX
     } else if (nextY + ball->entityRect.height() > gameFieldRows()) {
         return MoveBlocker::bottomWall;
     } else {
-        return MoveBlocker::none;
+        return std::nullopt;
     }
+}
+
+std::optional<int> GameManager::expectedBallAndOpponentContactX(GameManager* gameManager) const {
+    for (const auto& entity : entities) {
+        if (entity != gameManager) {
+            const auto expectedBallAndOpponentContactXValue = entity->expectedBallAndOpponentContactX(gameManager);
+            if (expectedBallAndOpponentContactXValue.has_value()) {
+               return expectedBallAndOpponentContactXValue;
+            }
+        }
+    }
+    return std::nullopt;
 }
 
 void GameManager::onGoal() {

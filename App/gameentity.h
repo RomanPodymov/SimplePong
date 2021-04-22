@@ -11,7 +11,7 @@
 
 #include <QRect>
 
-enum MoveBlocker { none, rightWall, bottomWall, leftWall, topWall, paddle, paddleOpponent };
+enum MoveBlocker { rightWall, bottomWall, leftWall, topWall, paddle, paddleOpponent };
 
 class GameManager;
 
@@ -23,7 +23,8 @@ public:
     virtual void onTimerTick(GameManager*) = 0;
     virtual void onMouseMoveLeft(GameManager*) = 0;
     virtual void onMouseMoveRight(GameManager*) = 0;
-    virtual MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const = 0;
+    virtual std::optional<MoveBlocker> ballMoveBlocker(const GameEntity* const, int, int) const = 0;
+    virtual std::optional<int> expectedBallAndOpponentContactX(GameManager*) const = 0;
     virtual void onGameReset(GameManager*);
 
 protected:

@@ -21,7 +21,8 @@ public:
     void onTimerTick(GameManager*) { };
     void onMouseMoveLeft(GameManager*);
     void onMouseMoveRight(GameManager*);
-    MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const;
+    std::optional<MoveBlocker> ballMoveBlocker(const GameEntity* const, int, int) const;
+    std::optional<int> expectedBallAndOpponentContactX(GameManager*) const { return std::nullopt; }
 
 protected:
     QRect initialEntityRect(GameManager*) const;

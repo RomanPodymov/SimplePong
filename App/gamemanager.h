@@ -22,12 +22,13 @@ public:
     GameManager(const GameView*, int, int);
     void start();
     void addEntity(GameEntity*);
-    MoveBlocker firstBallMoveBlocker(const GameEntity* const, int, int) const;
+    std::optional<MoveBlocker> firstBallMoveBlocker(const GameEntity* const, int, int) const;
     void setupInitialState(GameManager*, bool) { }
     void onTimerTick(GameManager*);
     void onMouseMoveLeft(GameManager*);
     void onMouseMoveRight(GameManager*);
-    MoveBlocker ballMoveBlocker(const GameEntity* const, int, int) const;
+    std::optional<MoveBlocker> ballMoveBlocker(const GameEntity* const, int, int) const;
+    std::optional<int> expectedBallAndOpponentContactX(GameManager* gameManager) const;
     void onGameReset(GameManager*);
     int gameFieldColumns() const { return entityRect.width(); }
     int gameFieldRows() const { return entityRect.height(); }

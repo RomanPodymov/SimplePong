@@ -25,16 +25,41 @@ void Ball::setupInitialState(GameManager* gameManager, bool firstTime) {
 
 void Ball::onTimerTick(GameManager* gameManager) {
     const auto moveBlockerValue = moveBlocker(gameManager);
-    if (moveBlockerValue == MoveBlocker::bottomWall || moveBlockerValue == MoveBlocker::topWall) {
-        emit goal();
-        return;
-    } else if (moveBlockerValue != MoveBlocker::none) {
-        currentMoveDirection = nextMoveDirection(moveBlockerValue);
+    if (moveBlockerValue) {
+        if (moveBlockerValue == MoveBlocker::bottomWall || moveBlockerValue == MoveBlocker::topWall) {
+            emit goal();
+            return;
+        } else {
+            currentMoveDirection = nextMoveDirection(moveBlockerValue.value());
+        }
     }
     const auto dXdY = getDxDy();
     entityRect = nextEntityRect(std::get<0>(dXdY), std::get<1>(dXdY));
     drawEntity();
 }
+
+std::optional<int> Ball::expectedBallAndOpponentContactX(GameManager*) const {
+    switch (currentMoveDirection) {
+        case MoveDirection::rightUp: {
+            double stepsExpected = entityRect.y() / stepSize;
+            return entityRect.x() + stepsExpected * stepSize;
+        }
+
+        case MoveDirection::rightDown: {
+            return std::nullopt;
+        }
+
+        case MoveDirection::leftDown: {
+            return std::nullopt;
+        }
+
+        case MoveDirection::leftUp: {
+            double stepsExpected = entityRect.y() / stepSize;
+            return entityRect.x() - stepsExpected * stepSize;
+        }
+    }
+}
+
 
 QRect Ball::initialEntityRect(GameManager* gameManager) const {
     return QRect(
@@ -75,7 +100,7 @@ std::tuple<int, int> Ball::getDxDy() const {
     }
 }
 
-MoveBlocker Ball::moveBlocker(GameManager* gameManager) const {
+std::optional<MoveBlocker> Ball::moveBlocker(GameManager* gameManager) const {
     const auto dXdY = getDxDy();
     const auto nextX = entityRect.x() + std::get<0>(dXdY);
     const auto nextY = entityRect.y() + std::get<1>(dXdY);
