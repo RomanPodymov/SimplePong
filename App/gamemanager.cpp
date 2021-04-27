@@ -11,7 +11,9 @@
 
 GameManager::GameManager(const GameView* gameView, int gameFieldRows, int gameFieldColumns): GameEntity(QRect(0, 0, gameFieldColumns, gameFieldRows), 0),
     gameView(gameView),
-    isPaused(false) {
+    isPaused(false),
+    scorePaddle(0),
+    scorePaddleOpponent(0) {
 
 }
 
@@ -91,7 +93,20 @@ std::optional<int> GameManager::expectedBallAndOpponentContactX(GameManager* gam
     return std::nullopt;
 }
 
-void GameManager::onGoal() {
+void GameManager::updateScorePaddleLabel(QPointer<QLabel> label) {
+    label->setText(QString::number(scorePaddle));
+}
+
+void GameManager::updateScorePaddleOpponent(QPointer<QLabel> label) {
+    label->setText(QString::number(scorePaddleOpponent));
+}
+
+void GameManager::onGoal(bool toOpponent) {
+    if (toOpponent) {
+        scorePaddle++;
+    } else {
+        scorePaddleOpponent++;
+    }
     onGameReset(this);
 }
 

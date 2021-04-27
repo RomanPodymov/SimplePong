@@ -19,6 +19,7 @@
 #include <QPointer>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QLabel>
 
 class MainWidget final: public QWidget {
     Q_OBJECT
@@ -28,6 +29,9 @@ public:
     ~MainWidget();
     void resumeGame();
     void pauseGame();
+
+public slots:
+    void onGoal(bool);
 
 private:
     void setupGameManager(QSize);
@@ -40,7 +44,10 @@ private:
     QPointer<Ball> ball;
     PaddleOpponent* paddleOpponent;
     QPointer<QHBoxLayout> customLayout;
+    QPointer<QVBoxLayout> informationLayout;
     QPointer<QPushButton> buttonPauseResume;
+    QPointer<QLabel> scorePaddle;
+    QPointer<QLabel> scorePaddleOpponent;
 };
 
 #endif // MAINWIDGET_H

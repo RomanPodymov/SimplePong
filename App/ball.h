@@ -27,7 +27,7 @@ public:
     std::optional<int> expectedBallAndOpponentContactX(GameManager*) const;
 
 signals:
-   void goal();
+   void goal(bool);
 
 protected:
     QRect initialEntityRect(GameManager*) const;

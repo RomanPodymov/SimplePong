@@ -14,6 +14,7 @@
 #include <QObject>
 #include <QVarLengthArray>
 #include <QPointer>
+#include <QLabel>
 
 class MainWidget;
 
@@ -36,9 +37,11 @@ public:
     void onGameReset(GameManager*);
     int gameFieldColumns() const { return entityRect.width(); }
     int gameFieldRows() const { return entityRect.height(); }
+    void updateScorePaddleLabel(QPointer<QLabel>);
+    void updateScorePaddleOpponent(QPointer<QLabel>);
 
 public slots:
-    void onGoal();
+    void onGoal(bool);
 
 protected:
     void timerEvent(QTimerEvent *event);
@@ -57,6 +60,8 @@ private:
     int eventsTimerId;
     QVarLengthArray<GameEntity*> entities;
     bool isPaused;
+    int scorePaddle;
+    int scorePaddleOpponent;
 };
 
 #endif // GAMEMANAGER_H

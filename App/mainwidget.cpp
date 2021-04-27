@@ -16,11 +16,22 @@ MainWidget::MainWidget(QSize screenSize, QWidget *parent): QWidget(parent) {
     gameView = new GameView(scene);
     customLayout->addWidget(gameView);
 
+    informationLayout = new QVBoxLayout();
+    customLayout->addLayout(informationLayout);
+
+    scorePaddleOpponent = new QLabel;
+    scorePaddleOpponent->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    informationLayout->addWidget(scorePaddleOpponent);
+
     buttonPauseResume = new QPushButton;
     QObject::connect(buttonPauseResume, &QPushButton::pressed, [&]() {
         gameManager->pauseResumeGame(this);
     });
-    customLayout->addWidget(buttonPauseResume);
+    informationLayout->addWidget(buttonPauseResume);
+
+    scorePaddle = new QLabel;
+    scorePaddle->setAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+    informationLayout->addWidget(scorePaddle);
 
     setupGameManager(screenSize);
 
@@ -34,6 +45,8 @@ MainWidget::MainWidget(QSize screenSize, QWidget *parent): QWidget(parent) {
 
 MainWidget::~MainWidget() {
     delete buttonPauseResume;
+    delete scorePaddleOpponent;
+    delete scorePaddle;
     delete gameManager;
     delete paddleOpponent;
     delete ball;
@@ -41,6 +54,7 @@ MainWidget::~MainWidget() {
     delete gameView;
     delete scene;
     delete customLayout;
+    delete informationLayout;
 }
 
 void MainWidget::resumeGame() {
@@ -51,11 +65,17 @@ void MainWidget::pauseGame() {
     buttonPauseResume->setText(MainWidget::tr("Resume"));
 }
 
+void MainWidget::onGoal(bool toOpponent) {
+    gameManager->updateScorePaddleLabel(scorePaddle);
+    gameManager->updateScorePaddleOpponent(scorePaddleOpponent);
+}
+
 void MainWidget::setupGameManager(QSize screenSize) {
     paddle = new Paddle(QRect(0, 0, 100, 20), 5);
     scene->addItem(paddle);
 
     ball = new Ball(QRect(0, 0, 10, 10), 5);
+    QObject::connect(ball, SIGNAL(goal(bool)), this, SLOT(onGoal(bool)));
     scene->addItem(ball);
 
     paddleOpponent = new PaddleOpponent(QRect(0, 0, 100, 20), 5);

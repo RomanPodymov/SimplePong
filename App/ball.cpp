@@ -17,7 +17,7 @@ Ball::Ball(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize) {
 
 void Ball::setupInitialState(GameManager* gameManager, bool firstTime) {
     if (firstTime) {
-        QObject::connect(this, SIGNAL(goal()), gameManager, SLOT(onGoal()));
+        QObject::connect(this, SIGNAL(goal(bool)), gameManager, SLOT(onGoal(bool)));
     }
     currentMoveDirection = Ball::randomDirection();
     GameEntity::setupInitialState(gameManager, firstTime);
@@ -26,8 +26,11 @@ void Ball::setupInitialState(GameManager* gameManager, bool firstTime) {
 void Ball::onTimerTick(GameManager* gameManager) {
     const auto moveBlockerValue = moveBlocker(gameManager);
     if (moveBlockerValue) {
-        if (moveBlockerValue == MoveBlocker::bottomWall || moveBlockerValue == MoveBlocker::topWall) {
-            emit goal();
+        if (moveBlockerValue == MoveBlocker::bottomWall) {
+            emit goal(true);
+            return;
+        } else if (moveBlockerValue == MoveBlocker::topWall) {
+            emit goal(false);
             return;
         } else {
             currentMoveDirection = nextMoveDirection(moveBlockerValue.value());
