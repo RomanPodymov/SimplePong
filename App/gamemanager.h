@@ -15,12 +15,16 @@
 #include <QVarLengthArray>
 #include <QPointer>
 
+class MainWidget;
+
 class GameManager final: public QObject, public GameEntity {
     Q_OBJECT
 
 public:
     GameManager(const GameView*, int, int);
-    void start();
+    void pauseResumeGame(MainWidget*);
+    void resumeGame(MainWidget*);
+    void pauseGame(MainWidget*);
     void addEntity(GameEntity*);
     std::optional<MoveBlocker> firstBallMoveBlocker(const GameEntity* const, int, int) const;
     void setupInitialState(GameManager*, bool) { }
@@ -52,6 +56,7 @@ private:
     const QPointer<const GameView> gameView;
     int eventsTimerId;
     QVarLengthArray<GameEntity*> entities;
+    bool isPaused;
 };
 
 #endif // GAMEMANAGER_H

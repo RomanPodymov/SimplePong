@@ -7,15 +7,35 @@
 //
 
 #include "gamemanager.h"
+#include "mainwidget.h"
 
 GameManager::GameManager(const GameView* gameView, int gameFieldRows, int gameFieldColumns): GameEntity(QRect(0, 0, gameFieldColumns, gameFieldRows), 0),
-    gameView(gameView) {
+    gameView(gameView),
+    isPaused(false) {
+
+}
+
+void GameManager::pauseResumeGame(MainWidget* mainWidget) {
+    if (isPaused) {
+        resumeGame(mainWidget);
+    } else {
+        pauseGame(mainWidget);
+    }
+    isPaused = !isPaused;
+}
+
+void GameManager::resumeGame(MainWidget* mainWidget) {
+    mainWidget->resumeGame();
+    eventsTimerId = startTimer(40, Qt::TimerType::PreciseTimer);
     QObject::connect(gameView, SIGNAL(mouseMoveLeft()), this, SLOT(onMouseMoveLeft()));
     QObject::connect(gameView, SIGNAL(mouseMoveRight()), this, SLOT(onMouseMoveRight()));
 }
 
-void GameManager::start() {
-    eventsTimerId = startTimer(40, Qt::TimerType::PreciseTimer);
+void GameManager::pauseGame(MainWidget* mainWidget) {
+    mainWidget->pauseGame();
+    killTimer(eventsTimerId);
+    QObject::disconnect(gameView, SIGNAL(mouseMoveLeft()), this, SLOT(onMouseMoveLeft()));
+    QObject::disconnect(gameView, SIGNAL(mouseMoveRight()), this, SLOT(onMouseMoveRight()));
 }
 
 void GameManager::addEntity(GameEntity* entity) {
@@ -63,7 +83,7 @@ std::optional<int> GameManager::expectedBallAndOpponentContactX(GameManager* gam
     for (const auto& entity : entities) {
         if (entity != gameManager) {
             const auto expectedBallAndOpponentContactXValue = entity->expectedBallAndOpponentContactX(gameManager);
-            if (expectedBallAndOpponentContactXValue.has_value()) {
+            if (expectedBallAndOpponentContactXValue) {
                return expectedBallAndOpponentContactXValue;
             }
         }

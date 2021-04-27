@@ -27,12 +27,6 @@ public:
 protected:
     QRect initialEntityRect(GameManager*) const;
     void drawEntity();
-
-private:
-    static MoveDirection randomDirection();
-
-private:
-    MoveDirection currentMoveDirection;
 };
 
 #endif // PADDLEOPPONENT_H

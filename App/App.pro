@@ -10,6 +10,7 @@ SOURCES += \
     gameentity.cpp \
     gamemanager.cpp \
     gameview.cpp \
+    mainwidget.cpp \
     paddle.cpp \
     paddleopponent.cpp
 
@@ -18,5 +19,13 @@ HEADERS += \
     gameentity.h \
     gamemanager.h \
     gameview.h \
+    mainwidget.h \
     paddle.h \
     paddleopponent.h
+
+TRANSLATIONS += \
+    Translations/Translations_MainWidget_en.ts \
+    Translations/Translations_MainWidget_cs.ts
+
+RESOURCES += \
+    mainwidgetresources.qrc

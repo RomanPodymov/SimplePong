@@ -8,7 +8,7 @@
 
 #include "paddle.h"
 #include "gamemanager.h"
-#include <QPen>
+#include <QBrush>
 
 Paddle::Paddle(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize) {
 
@@ -45,8 +45,8 @@ QRect Paddle::initialEntityRect(GameManager* gameManager) const {
 }
 
 void Paddle::drawEntity() {
-    QPen pen(Qt::green, 3);
-    setPen(pen);
+    QBrush brush(Qt::green);
+    setBrush(brush);
     setRect(entityRect);
 }
 

@@ -6,40 +6,20 @@
 //  Copyright © 2021 SimplePong. All rights reserved.
 //
 
-#include "gamemanager.h"
-#include "gameview.h"
-#include "ball.h"
-#include "paddle.h"
-#include "paddleopponent.h"
+#include "mainwidget.h"
 #include <QApplication>
-#include <QGraphicsScene>
-#include <QGraphicsView>
+#include <QTranslator>
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    QSize screenSize(640, 480);
-    QGraphicsScene scene(0, 0, screenSize.width(), screenSize.height());
+    QTranslator translator;
+    if (!translator.load(":/translations/strings")) {
+        exit(EXIT_FAILURE);
+    }
+    a.installTranslator(&translator);
 
-    Paddle paddle(QRect(0, 0, 100, 20), 5);
-    scene.addItem(&paddle);
-
-    Ball ball(QRect(0, 0, 10, 10), 5);
-    scene.addItem(&ball);
-
-    PaddleOpponent paddleOpponent(QRect(0, 0, 100, 20), 5);
-    scene.addItem(&paddleOpponent);
-
-    GameView view(&scene);
-
-    GameManager gameManager(&view, screenSize.height(), screenSize.width());
-    gameManager.addEntity(&paddle);
-    gameManager.addEntity(&ball);
-    gameManager.addEntity(&paddleOpponent);
-    gameManager.addEntity(&gameManager);
-    gameManager.start();
-
-    view.setFixedSize(screenSize);
-    view.show();
+    MainWidget w;
+    w.show();
 
     return a.exec();
 }

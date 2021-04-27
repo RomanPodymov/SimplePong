@@ -8,7 +8,7 @@
 
 #include "ball.h"
 #include "gamemanager.h"
-#include <QPen>
+#include <QBrush>
 #include <QRandomGenerator>
 
 Ball::Ball(QRect entityRect, int stepSize): GameEntity(entityRect, stepSize) {
@@ -71,8 +71,8 @@ QRect Ball::initialEntityRect(GameManager* gameManager) const {
 }
 
 void Ball::drawEntity() {
-    QPen pen(Qt::yellow, 3);
-    setPen(pen);
+    QBrush brush(Qt::yellow);
+    setBrush(brush);
     setRect(entityRect);
 }
 

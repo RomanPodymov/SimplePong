@@ -8,36 +8,37 @@
 
 #include "paddleopponent.h"
 #include "gamemanager.h"
-#include <QPen>
-#include <QRandomGenerator>
+#include <QBrush>
 
 PaddleOpponent::PaddleOpponent(QRect entityRect, int stepSize): Paddle(entityRect, stepSize) {
 
 }
 
 void PaddleOpponent::setupInitialState(GameManager* gameManager, bool firstTime) {
-    currentMoveDirection = PaddleOpponent::randomDirection();
     Paddle::setupInitialState(gameManager, firstTime);
 }
 
 void PaddleOpponent::onTimerTick(GameManager* gameManager) {
     const auto expectedBallAndOpponentContactXValue = gameManager->expectedBallAndOpponentContactX(gameManager);
-    if (!expectedBallAndOpponentContactXValue.has_value()) {
+    if (!expectedBallAndOpponentContactXValue) {
         return;
     }
+    std::optional<MoveDirection> currentMoveDirection;
     if (expectedBallAndOpponentContactXValue < entityRect.x() + entityRect.width()/2) {
         currentMoveDirection = MoveDirection::left;
-    } else {
+    } else if (expectedBallAndOpponentContactXValue > entityRect.x() + entityRect.width()/2) {
         currentMoveDirection = MoveDirection::right;
+    } else {
+        currentMoveDirection = std::nullopt;
     }
     if (currentMoveDirection == MoveDirection::left && !canMoveLeft(gameManager)) {
-        currentMoveDirection = MoveDirection::right;
+        currentMoveDirection = std::nullopt;
     } else if (currentMoveDirection == MoveDirection::right && !canMoveRight(gameManager)) {
-        currentMoveDirection = MoveDirection::left;
+        currentMoveDirection = std::nullopt;
     }
     if (currentMoveDirection == MoveDirection::left) {
         Paddle::onMouseMoveLeft(gameManager);
-    } else {
+    } else if (currentMoveDirection == MoveDirection::right) {
         Paddle::onMouseMoveRight(gameManager);
     }
 }
@@ -61,11 +62,7 @@ QRect PaddleOpponent::initialEntityRect(GameManager* gameManager) const {
 }
 
 void PaddleOpponent::drawEntity() {
-    QPen pen(Qt::red, 3);
-    setPen(pen);
+    QBrush brush(Qt::red);
+    setBrush(brush);
     setRect(entityRect);
-}
-
-PaddleOpponent::MoveDirection PaddleOpponent::randomDirection() {
-    return MoveDirection(QRandomGenerator::global()->generate() % 2);
 }
