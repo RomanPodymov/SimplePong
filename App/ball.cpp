@@ -27,10 +27,10 @@ void Ball::onTimerTick(GameManager* gameManager) {
     const auto moveBlockerValue = moveBlocker(gameManager);
     if (moveBlockerValue) {
         if (moveBlockerValue == MoveBlocker::bottomWall) {
-            emit goal(true);
+            emit goal(false);
             return;
         } else if (moveBlockerValue == MoveBlocker::topWall) {
-            emit goal(false);
+            emit goal(true);
             return;
         } else {
             currentMoveDirection = nextMoveDirection(moveBlockerValue.value());

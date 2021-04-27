@@ -66,8 +66,8 @@ void MainWidget::pauseGame() {
 }
 
 void MainWidget::onGoal(bool toOpponent) {
-    gameManager->updateScorePaddleLabel(scorePaddle);
-    gameManager->updateScorePaddleOpponent(scorePaddleOpponent);
+    gameManager->updateScorePaddleLabel(scorePaddle, toOpponent);
+    gameManager->updateScorePaddleOpponent(scorePaddleOpponent, !toOpponent);
 }
 
 void MainWidget::setupGameManager(QSize screenSize) {
@@ -87,4 +87,6 @@ void MainWidget::setupGameManager(QSize screenSize) {
     gameManager->addEntity(paddleOpponent);
     gameManager->addEntity(gameManager);
     gameManager->resumeGame(this);
+    gameManager->updateScorePaddleLabel(scorePaddle, false);
+    gameManager->updateScorePaddleOpponent(scorePaddleOpponent, false);
 }

@@ -37,8 +37,8 @@ public:
     void onGameReset(GameManager*);
     int gameFieldColumns() const { return entityRect.width(); }
     int gameFieldRows() const { return entityRect.height(); }
-    void updateScorePaddleLabel(QPointer<QLabel>);
-    void updateScorePaddleOpponent(QPointer<QLabel>);
+    void updateScorePaddleLabel(QPointer<QLabel>, bool);
+    void updateScorePaddleOpponent(QPointer<QLabel>, bool);
 
 public slots:
     void onGoal(bool);

@@ -93,20 +93,21 @@ std::optional<int> GameManager::expectedBallAndOpponentContactX(GameManager* gam
     return std::nullopt;
 }
 
-void GameManager::updateScorePaddleLabel(QPointer<QLabel> label) {
+void GameManager::updateScorePaddleLabel(QPointer<QLabel> label, bool shouldIncrementValue) {
+    if (shouldIncrementValue) {
+        scorePaddle++;
+    }
     label->setText(QString::number(scorePaddle));
 }
 
-void GameManager::updateScorePaddleOpponent(QPointer<QLabel> label) {
+void GameManager::updateScorePaddleOpponent(QPointer<QLabel> label, bool shouldIncrementValue) {
+    if (shouldIncrementValue) {
+        scorePaddleOpponent++;
+    }
     label->setText(QString::number(scorePaddleOpponent));
 }
 
-void GameManager::onGoal(bool toOpponent) {
-    if (toOpponent) {
-        scorePaddle++;
-    } else {
-        scorePaddleOpponent++;
-    }
+void GameManager::onGoal(bool) {
     onGameReset(this);
 }
 
