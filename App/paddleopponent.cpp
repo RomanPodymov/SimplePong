@@ -9,6 +9,7 @@
 #include "paddleopponent.h"
 #include "gamemanager.h"
 #include <QBrush>
+#include <QRandomGenerator>
 
 PaddleOpponent::PaddleOpponent(QRect entityRect, int stepSize): Paddle(entityRect, stepSize) {
 
@@ -36,10 +37,13 @@ void PaddleOpponent::onTimerTick(GameManager* gameManager) {
     } else if (currentMoveDirection == MoveDirection::right && !canMoveRight(gameManager)) {
         currentMoveDirection = std::nullopt;
     }
-    if (currentMoveDirection == MoveDirection::left) {
-        Paddle::onMouseMoveLeft(gameManager);
-    } else if (currentMoveDirection == MoveDirection::right) {
-        Paddle::onMouseMoveRight(gameManager);
+    const auto shouldMove = (QRandomGenerator::global()->generate() % 2) == 0;
+    if (shouldMove) {
+        if (currentMoveDirection == MoveDirection::left) {
+            Paddle::onMouseMoveLeft(gameManager);
+        } else if (currentMoveDirection == MoveDirection::right) {
+            Paddle::onMouseMoveRight(gameManager);
+        }
     }
 }
 
