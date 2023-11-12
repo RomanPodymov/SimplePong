@@ -4,10 +4,12 @@
 <context>
     <name>MainWidget</name>
     <message>
+        <location filename="../mainwidget.cpp" line="61"/>
         <source>Pause</source>
         <translation>Pozastavit</translation>
     </message>
     <message>
+        <location filename="../mainwidget.cpp" line="65"/>
         <source>Resume</source>
         <translation>Pokračovat</translation>
     </message>
